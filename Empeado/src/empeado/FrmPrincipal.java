@@ -30,6 +30,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
         initComponents();
         jBEliminar.setEnabled(false);
         jBModificar.setEnabled(false);
+        this.setLocationRelativeTo(null);
       
         
     }
@@ -341,6 +342,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
                 limpiar();
                 jBEliminar.setEnabled(false);
                 Buscar.setEnabled(true);
+                jBModificar.setEnabled(false);
            
             
         } // TODO add your handling code here:
@@ -349,6 +351,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
     private void BuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BuscarActionPerformed
         jBEliminar.setEnabled(true);
         jBModificar.setEnabled(true);
+        jBNuevo.setEnabled(true);
         String cod = jTCodigo.getText();
         Persona per = GestorPersona.getInstancia().buscarPersona(cod);
         Empleado emp = GestorEmpleado.getInstancia().buscarEmpleado(cod);
