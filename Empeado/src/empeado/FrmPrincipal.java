@@ -5,14 +5,14 @@
  */
 package empeado;
 
-import empeado.baseDeDatos.ConexionBD;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+//import empeado.baseDeDatos.ConexionBD;
+//import java.sql.Connection;
+//import java.sql.PreparedStatement;
+//import java.sql.ResultSet;
+//import java.sql.SQLException;
+//import java.util.ArrayList;
+//import java.util.logging.Level;
+//import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -24,15 +24,19 @@ public class FrmPrincipal extends javax.swing.JFrame {
     /**
      * Creates new form FrmPrincipal
      */
-    int edita=1;
+    
+    int edita;
+    boolean nuevo;
     public FrmPrincipal() {
-         
+        edita=0;
+        nuevo=true;
         initComponents();
         jBEliminar.setEnabled(false);
         jBModificar.setEnabled(false);
+        jBCancelar.setEnabled(false);
+        jBGuardar.setEnabled(false);
         this.setLocationRelativeTo(null);
-      
-        
+//        JOptionPane.showMessageDialog(null, "apenas arranca "+edita);
     }
 
     /**
@@ -59,8 +63,10 @@ public class FrmPrincipal extends javax.swing.JFrame {
         jTFechaIngreso = new javax.swing.JTextField();
         jPBotones = new javax.swing.JPanel();
         jBEliminar = new javax.swing.JButton();
+        jBCancelar = new javax.swing.JButton();
         jBModificar = new javax.swing.JButton();
         jBNuevo = new javax.swing.JButton();
+        jBGuardar = new javax.swing.JButton();
         jBSalir = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -94,7 +100,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
 
         jLCargo.setText("Cargo:");
 
-        jCCargo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "01-GERENTE", "02-EMPLEADO" }));
+        jCCargo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "SELECCIONAR CARGO", "01-GERENTE", "02-EMPLEADO" }));
         jCCargo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jCCargoActionPerformed(evt);
@@ -117,12 +123,12 @@ public class FrmPrincipal extends javax.swing.JFrame {
                 .addComponent(jLDatosEmpleado)
                 .addGap(0, 0, Short.MAX_VALUE))
             .addGroup(jPrincipalLayout.createSequentialGroup()
-                .addGroup(jPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPrincipalLayout.createSequentialGroup()
-                        .addGap(76, 76, 76)
+                        .addGap(82, 82, 82)
                         .addComponent(jLCodigo)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jTCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jTCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(Buscar))
                     .addGroup(jPrincipalLayout.createSequentialGroup()
@@ -134,12 +140,11 @@ public class FrmPrincipal extends javax.swing.JFrame {
                             .addComponent(jLCargo))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTFechaIngreso, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTApellido, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(jPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(jCCargo, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jTNombre, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 147, Short.MAX_VALUE)))))
-                .addContainerGap(108, Short.MAX_VALUE))
+                            .addComponent(jTApellido)
+                            .addComponent(jTNombre)
+                            .addComponent(jCCargo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jTFechaIngreso))))
+                .addContainerGap(83, Short.MAX_VALUE))
         );
         jPrincipalLayout.setVerticalGroup(
             jPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -176,6 +181,13 @@ public class FrmPrincipal extends javax.swing.JFrame {
             }
         });
 
+        jBCancelar.setText("Cancelar");
+        jBCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBCancelarActionPerformed(evt);
+            }
+        });
+
         jBModificar.setText("Modificar");
         jBModificar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -190,6 +202,13 @@ public class FrmPrincipal extends javax.swing.JFrame {
             }
         });
 
+        jBGuardar.setText("Guardar");
+        jBGuardar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBGuardarActionPerformed(evt);
+            }
+        });
+
         jBSalir.setText("Salir");
         jBSalir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -201,26 +220,34 @@ public class FrmPrincipal extends javax.swing.JFrame {
         jPBotones.setLayout(jPBotonesLayout);
         jPBotonesLayout.setHorizontalGroup(
             jPBotonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPBotonesLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jBNuevo)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 43, Short.MAX_VALUE)
-                .addComponent(jBModificar)
-                .addGap(33, 33, 33)
-                .addComponent(jBEliminar)
-                .addGap(34, 34, 34)
-                .addComponent(jBSalir)
-                .addContainerGap())
+            .addGroup(jPBotonesLayout.createSequentialGroup()
+                .addGap(45, 45, 45)
+                .addGroup(jPBotonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jBNuevo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jBCancelar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(44, 44, 44)
+                .addGroup(jPBotonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jBModificar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jBGuardar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPBotonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jBEliminar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jBSalir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(38, 38, 38))
         );
         jPBotonesLayout.setVerticalGroup(
             jPBotonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPBotonesLayout.createSequentialGroup()
-                .addContainerGap(25, Short.MAX_VALUE)
+                .addContainerGap()
                 .addGroup(jPBotonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jBEliminar)
-                    .addComponent(jBModificar)
                     .addComponent(jBNuevo)
-                    .addComponent(jBSalir))
+                    .addComponent(jBModificar)
+                    .addComponent(jBEliminar))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPBotonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jBSalir)
+                    .addComponent(jBCancelar)
+                    .addComponent(jBGuardar))
                 .addContainerGap())
         );
 
@@ -241,9 +268,9 @@ public class FrmPrincipal extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPrincipal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPBotones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -262,93 +289,36 @@ public class FrmPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_jCCargoActionPerformed
 
     private void jBModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBModificarActionPerformed
-        int edita=1;
-        
-        if (jBModificar.getText().equals("Modificar")) {
-            jBNuevo.setText("Grabar");
-            jBModificar.setText("Cancelar");
-            edita=1;
-            
-            desactctrls(true);
-            jBEliminar.setEnabled(false) ;
-            Buscar.setEnabled(false);
-        } else if(jBModificar.getText().equals("Cancelar")) {
-            jBNuevo.setText("Nuevo");
-            jBModificar.setText("Modificar");
-            limpiar();
-            jBEliminar.setEnabled(false);
-            Buscar.setEnabled(true);
-            desactctrls(true);
-        }
-
+        nuevo=false;
+//        JOptionPane.showMessageDialog(null, "ENTRANDO A MODIFICAR ");
+        jBEliminar.setEnabled(false);
+        jBModificar.setEnabled(false);
+        jBNuevo.setEnabled(false);
+        Buscar.setEnabled(false);
+        jBCancelar.setEnabled(true);
+        jBGuardar.setEnabled(true);
+        jBSalir.setEnabled(true);
+        desactctrls(true);
     }//GEN-LAST:event_jBModificarActionPerformed
     
     private void jBNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBNuevoActionPerformed
-        
-        String cod,nom,app,idcargo,fecha;
-        cod=jTCodigo.getText();
-        nom=jTNombre.getText();
-        app=jTApellido.getText();
-        idcargo=((String) jCCargo.getSelectedItem()).substring(0,2);
-        fecha=jTFechaIngreso.getText();
-        if (jBNuevo.getText().equals("Nuevo")) {
-            jBNuevo.setText("Grabar");
-            edita=0;
+            nuevo=true;
+//            JOptionPane.showMessageDialog(null, "ENTRANDO A NUEVO");
             desactctrls(true);
             jBEliminar.setEnabled(false);
+            jBNuevo.setEnabled(false);
+            jBModificar.setEnabled(false);
             Buscar.setEnabled(false);
+            jBCancelar.setEnabled(true);
+            jBGuardar.setEnabled(true);
+            jBSalir.setEnabled(true);
             limpiar();
-        } else if(jBNuevo.getText().equals("Grabar")) {
-            JOptionPane.showMessageDialog(null, edita);
-            
-                jBNuevo.setText("Nuevo");
-                jBModificar.setText("Modificar");
-                if (edita==0){
-                    Respuesta resp = GestorPersona.getInstancia().registrarPersona(cod,app,nom);
-                    if (resp.isEstado()) {
-                        JOptionPane.showMessageDialog(this, resp.getMensaje(), "Info", JOptionPane.INFORMATION_MESSAGE);
-                        //this.dispose();
-                    } else {
-                        JOptionPane.showMessageDialog(this, resp.getMensaje(), "Error", JOptionPane.ERROR_MESSAGE);
-                    }
-                
-                    Respuesta resp1 = GestorEmpleado.getInstancia().registrarEmpleado(cod,fecha,idcargo);
-                    if (resp.isEstado()) {
-                        JOptionPane.showMessageDialog(this, resp1.getMensaje(), "Info", JOptionPane.INFORMATION_MESSAGE);
-                        //this.dispose();
-                    } else {
-                        JOptionPane.showMessageDialog(this, resp1.getMensaje(), "Error", JOptionPane.ERROR_MESSAGE);
-                    }
-                } else if (edita==1){
-                    JOptionPane.showMessageDialog(null, "modif");
-                    Respuesta resp = GestorPersona.getInstancia().modificarPersona(cod,app,nom);
-                    if (resp.isEstado()) {
-                        JOptionPane.showMessageDialog(this, resp.getMensaje(), "Info", JOptionPane.INFORMATION_MESSAGE);
-                        //this.dispose();
-                    } else {
-                        JOptionPane.showMessageDialog(this, resp.getMensaje(), "Error", JOptionPane.ERROR_MESSAGE);
-                    }
-                
-                    Respuesta resp1 = GestorEmpleado.getInstancia().modificarEmpleado(cod,fecha,idcargo);
-                    if (resp.isEstado()) {
-                        JOptionPane.showMessageDialog(this, resp1.getMensaje(), "Info", JOptionPane.INFORMATION_MESSAGE);
-                        //this.dispose();
-                    } else {
-                        JOptionPane.showMessageDialog(this, resp1.getMensaje(), "Error", JOptionPane.ERROR_MESSAGE);
-                    }
-                        
-                }
-                desactctrls(true);
-                limpiar();
-                jBEliminar.setEnabled(false);
-                Buscar.setEnabled(true);
-                jBModificar.setEnabled(false);
-           
-            
-        } // TODO add your handling code here:
+            desactctrls(true);
     }//GEN-LAST:event_jBNuevoActionPerformed
 
     private void BuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BuscarActionPerformed
+        nuevo=false;  
+//        JOptionPane.showMessageDialog(null, "en buscar "+edita);
         jBEliminar.setEnabled(true);
         jBModificar.setEnabled(true);
         jBNuevo.setEnabled(true);
@@ -356,7 +326,6 @@ public class FrmPrincipal extends javax.swing.JFrame {
         Persona per = GestorPersona.getInstancia().buscarPersona(cod);
         Empleado emp = GestorEmpleado.getInstancia().buscarEmpleado(cod);
         desactctrls(false);
-        //JOptionPane.showMessageDialog(null, emp.toString());
         jTApellido.setText(per.getApellido());
         jTNombre.setText(per.getNombres());
         jCCargo.setSelectedIndex(Integer.parseInt(emp.getidCargo())-1);
@@ -376,6 +345,78 @@ public class FrmPrincipal extends javax.swing.JFrame {
     private void jTCodigoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTCodigoActionPerformed
       
     }//GEN-LAST:event_jTCodigoActionPerformed
+
+    private void jBCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBCancelarActionPerformed
+//        JOptionPane.showMessageDialog(null, "ENTRANDO A CANCELAR");
+        desactctrls(true);
+        jBEliminar.setEnabled(false);
+        jBNuevo.setEnabled(true);
+        jBModificar.setEnabled(false);
+        Buscar.setEnabled(true);
+        jBCancelar.setEnabled(false);
+        jBGuardar.setEnabled(false);
+        jBSalir.setEnabled(true);
+        limpiar();
+        desactctrls(true);
+        nuevo=true;
+    }//GEN-LAST:event_jBCancelarActionPerformed
+
+    private void jBGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBGuardarActionPerformed
+//        JOptionPane.showMessageDialog(null, "ENTRANDO A GUARDAR");
+        
+        jBEliminar.setEnabled(false);
+        jBNuevo.setEnabled(true);
+        jBModificar.setEnabled(false);
+        Buscar.setEnabled(true);
+        jBCancelar.setEnabled(false);
+        jBGuardar.setEnabled(false);
+        jBSalir.setEnabled(true);
+        
+        String cod,nom,app,idcargo,fecha;
+        cod=jTCodigo.getText();
+        nom=jTNombre.getText();
+        app=jTApellido.getText();
+        idcargo=((String) jCCargo.getSelectedItem()).substring(0,2);
+        fecha=jTFechaIngreso.getText();
+
+        if(nuevo){
+                    Respuesta resp = GestorPersona.getInstancia().registrarPersona(cod,app,nom);
+                    if (resp.isEstado()) {
+                        JOptionPane.showMessageDialog(this, resp.getMensaje(), "Info", JOptionPane.INFORMATION_MESSAGE);
+                        //this.dispose();
+                    } else {
+                        JOptionPane.showMessageDialog(this, resp.getMensaje(), "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                
+                    Respuesta resp1 = GestorEmpleado.getInstancia().registrarEmpleado(cod,fecha,idcargo);
+                    if (resp.isEstado()) {
+                        JOptionPane.showMessageDialog(this, resp1.getMensaje(), "Info", JOptionPane.INFORMATION_MESSAGE);
+                        //this.dispose();
+                    } else {
+                        JOptionPane.showMessageDialog(this, resp1.getMensaje(), "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+        }else{
+            Respuesta resp = GestorPersona.getInstancia().modificarPersona(cod,app,nom);
+                    if (resp.isEstado()) {
+                        JOptionPane.showMessageDialog(this, resp.getMensaje(), "Info", JOptionPane.INFORMATION_MESSAGE);
+                        //this.dispose();
+                    } else {
+                        JOptionPane.showMessageDialog(this, resp.getMensaje(), "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+            Respuesta resp1 = GestorEmpleado.getInstancia().modificarEmpleado(cod,fecha,idcargo);
+                    if (resp.isEstado()) {
+                        JOptionPane.showMessageDialog(this, resp1.getMensaje(), "Info", JOptionPane.INFORMATION_MESSAGE);
+                        //this.dispose();
+                    } else {
+                        JOptionPane.showMessageDialog(this, resp1.getMensaje(), "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+            
+        }            
+        
+        nuevo=true;
+        limpiar();
+        desactctrls(true);
+    }//GEN-LAST:event_jBGuardarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -411,7 +452,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
             }
         });
     }
-      private void desactctrls(boolean act){
+    private void desactctrls(boolean act){
         jTCodigo.setEnabled(act);
         jTApellido.setEnabled(act);
         jTNombre.setEnabled(act);
@@ -432,7 +473,9 @@ public class FrmPrincipal extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton Buscar;
+    private javax.swing.JButton jBCancelar;
     private javax.swing.JButton jBEliminar;
+    private javax.swing.JButton jBGuardar;
     private javax.swing.JButton jBModificar;
     private javax.swing.JButton jBNuevo;
     private javax.swing.JButton jBSalir;

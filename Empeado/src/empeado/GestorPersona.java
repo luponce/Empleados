@@ -23,7 +23,7 @@ import javax.swing.JOptionPane;
  */
 public class GestorPersona {
     private static GestorPersona instanciaUnica;
-    private ArrayList<Persona> personasDelSistema = new ArrayList<Persona>();
+    private final ArrayList<Persona> personasDelSistema = new ArrayList<>();
     private FrmPrincipal principal;
     Statement snt;
     
@@ -73,7 +73,8 @@ public class GestorPersona {
             snt = conexion.createStatement();
             snt.executeUpdate(SQL);
             snt.close();
-            return new Respuesta(true, "La persona se modifico correctamente");
+            return new Respuesta(true,null);
+//             "La persona se modifico correctamente"
            
         }catch (SQLException ex) {
             Logger.getLogger(GestorPersona.class.getName()).log(Level.SEVERE, null, ex);
@@ -122,7 +123,8 @@ public class GestorPersona {
                 nuevo.setApellido(apellido);
                 nuevo.setNombres(nombre);
                 personasDelSistema.add(nuevo);
-                return new Respuesta(true, "El jugador se ha registrado correctamente");
+                return new Respuesta(true,null );
+//                "La persona se ha registrado correctamente"
             }
             return new Respuesta(false, "Error al registrar al jugador");
         } catch (SQLException ex) {

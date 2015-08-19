@@ -79,7 +79,8 @@ public class GestorEmpleado {
                 nuevo.setFec_ing(fechaingreso);
                 nuevo.setidCargo(idcargo);
                 empleadosDelSistema.add(nuevo);
-                return new Respuesta(true, "El empleado se ha registrado correctamente");
+                return new Respuesta(true, null);
+//                "El empleado se ha registrado correctamente"
             }
             return new Respuesta(false, "Error al registrar al empleado");
         } catch (SQLException ex) {
