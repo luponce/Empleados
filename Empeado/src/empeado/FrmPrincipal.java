@@ -35,6 +35,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
         jBModificar.setEnabled(false);
         jBCancelar.setEnabled(false);
         jBGuardar.setEnabled(false);
+        Buscar.setEnabled(false);  
         this.setLocationRelativeTo(null);
 //        JOptionPane.showMessageDialog(null, "apenas arranca "+edita);
     }
@@ -80,6 +81,11 @@ public class FrmPrincipal extends javax.swing.JFrame {
                 jTCodigoActionPerformed(evt);
             }
         });
+        jTCodigo.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                jTCodigoKeyTyped(evt);
+            }
+        });
 
         Buscar.setText("Buscar");
         Buscar.addActionListener(new java.awt.event.ActionListener() {
@@ -101,6 +107,11 @@ public class FrmPrincipal extends javax.swing.JFrame {
         jLCargo.setText("Cargo:");
 
         jCCargo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "SELECCIONAR CARGO", "01-GERENTE", "02-EMPLEADO" }));
+        jCCargo.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                jCCargoItemStateChanged(evt);
+            }
+        });
         jCCargo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jCCargoActionPerformed(evt);
@@ -317,20 +328,22 @@ public class FrmPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_jBNuevoActionPerformed
 
     private void BuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BuscarActionPerformed
-        nuevo=false;  
-//        JOptionPane.showMessageDialog(null, "en buscar "+edita);
-        jBEliminar.setEnabled(true);
-        jBModificar.setEnabled(true);
-        jBNuevo.setEnabled(true);
-        String cod = jTCodigo.getText();
-        Persona per = GestorPersona.getInstancia().buscarPersona(cod);
-        Empleado emp = GestorEmpleado.getInstancia().buscarEmpleado(cod);
-        desactctrls(false);
-        jTApellido.setText(per.getApellido());
-        jTNombre.setText(per.getNombres());
-        jCCargo.setSelectedIndex(Integer.parseInt(emp.getidCargo())-1);
-        jTFechaIngreso.setText(emp.getFec_ing());
-        
+        if(jTCodigo.getText().equalsIgnoreCase("")){
+            JOptionPane.showMessageDialog(null, "Debes ingresar un codigo para realizar la busqueda");
+        }else{
+            nuevo=false;  
+            jBEliminar.setEnabled(true);
+            jBModificar.setEnabled(true);
+            jBNuevo.setEnabled(true);
+            String cod = jTCodigo.getText();
+            Persona per = GestorPersona.getInstancia().buscarPersona(cod);
+            Empleado emp = GestorEmpleado.getInstancia().buscarEmpleado(cod);
+            desactctrls(false);
+            jTApellido.setText(per.getApellido());
+            jTNombre.setText(per.getNombres());
+            jCCargo.setSelectedIndex(Integer.parseInt(emp.getidCargo())-1);
+            jTFechaIngreso.setText(emp.getFec_ing());
+        }
     }//GEN-LAST:event_BuscarActionPerformed
 
     private void jBEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBEliminarActionPerformed
@@ -362,8 +375,8 @@ public class FrmPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_jBCancelarActionPerformed
 
     private void jBGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBGuardarActionPerformed
-//        JOptionPane.showMessageDialog(null, "ENTRANDO A GUARDAR");
-        
+        boolean respuesta=validarTextboxes();
+        if (respuesta){
         jBEliminar.setEnabled(false);
         jBNuevo.setEnabled(true);
         jBModificar.setEnabled(false);
@@ -379,23 +392,30 @@ public class FrmPrincipal extends javax.swing.JFrame {
         idcargo=((String) jCCargo.getSelectedItem()).substring(0,2);
         fecha=jTFechaIngreso.getText();
 
-        if(nuevo){
+        if(nuevo){//registro nuevo
                     Respuesta resp = GestorPersona.getInstancia().registrarPersona(cod,app,nom);
-                    if (resp.isEstado()) {
-                        JOptionPane.showMessageDialog(this, resp.getMensaje(), "Info", JOptionPane.INFORMATION_MESSAGE);
-                        //this.dispose();
-                    } else {
-                        JOptionPane.showMessageDialog(this, resp.getMensaje(), "Error", JOptionPane.ERROR_MESSAGE);
-                    }
+//                    if (resp.isEstado()) {
+//                        JOptionPane.showMessageDialog(this, resp.getMensaje(), "Info", JOptionPane.INFORMATION_MESSAGE);
+//                        //this.dispose();
+//                    } else {
+//                        JOptionPane.showMessageDialog(this, resp.getMensaje(), "Error", JOptionPane.ERROR_MESSAGE);
+//                    }
                 
                     Respuesta resp1 = GestorEmpleado.getInstancia().registrarEmpleado(cod,fecha,idcargo);
-                    if (resp.isEstado()) {
-                        JOptionPane.showMessageDialog(this, resp1.getMensaje(), "Info", JOptionPane.INFORMATION_MESSAGE);
-                        //this.dispose();
-                    } else {
-                        JOptionPane.showMessageDialog(this, resp1.getMensaje(), "Error", JOptionPane.ERROR_MESSAGE);
+//                    if (resp1.isEstado()) {
+//                        JOptionPane.showMessageDialog(this, resp1.getMensaje(), "Info", JOptionPane.INFORMATION_MESSAGE);
+//                        //this.dispose();
+//                    } else {
+//                        JOptionPane.showMessageDialog(this, resp1.getMensaje(), "Error", JOptionPane.ERROR_MESSAGE);
+//                    }
+                    if(resp.isEstado()){
+                        if(resp1.isEstado()){
+                            JOptionPane.showMessageDialog(null,"Registro Exitoso");
+                        }
+                    }else{
+                        JOptionPane.showMessageDialog(null,"Error en el registro");
                     }
-        }else{
+        }else{//se modifica un registro existente
             Respuesta resp = GestorPersona.getInstancia().modificarPersona(cod,app,nom);
                     if (resp.isEstado()) {
                         JOptionPane.showMessageDialog(this, resp.getMensaje(), "Info", JOptionPane.INFORMATION_MESSAGE);
@@ -416,7 +436,16 @@ public class FrmPrincipal extends javax.swing.JFrame {
         nuevo=true;
         limpiar();
         desactctrls(true);
+        }
     }//GEN-LAST:event_jBGuardarActionPerformed
+
+    private void jTCodigoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTCodigoKeyTyped
+        Buscar.setEnabled(true);        
+    }//GEN-LAST:event_jTCodigoKeyTyped
+
+    private void jCCargoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jCCargoItemStateChanged
+        
+    }//GEN-LAST:event_jCCargoItemStateChanged
 
     /**
      * @param args the command line arguments
@@ -467,7 +496,27 @@ public class FrmPrincipal extends javax.swing.JFrame {
         jTFechaIngreso.setText("");
     }
     
-    
+    private boolean validarTextboxes(){
+        boolean respuesta=false;
+        if(!jTCodigo.getText().equalsIgnoreCase("")){
+            if(jTCodigo.getText().length()>4){
+                JOptionPane.showMessageDialog(null, "El código debe contener un máximo de 4 números");
+                return respuesta;
+            }
+            if(!jTApellido.getText().equalsIgnoreCase("")){
+                if(!jTNombre.getText().equalsIgnoreCase("")){
+                    if(jCCargo.getSelectedIndex()!=0){
+                        if(!jTFechaIngreso.getText().equalsIgnoreCase(""))
+                            respuesta=true;
+                    }
+                }
+            }
+        }else{
+            JOptionPane.showMessageDialog(null, "Los campos deben estar completos");
+            respuesta=false;
+        }
+        return respuesta;
+    }
   
 
 

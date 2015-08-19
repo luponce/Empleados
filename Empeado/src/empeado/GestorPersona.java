@@ -123,8 +123,8 @@ public class GestorPersona {
                 nuevo.setApellido(apellido);
                 nuevo.setNombres(nombre);
                 personasDelSistema.add(nuevo);
-                return new Respuesta(true,null );
-//                "La persona se ha registrado correctamente"
+                return new Respuesta(true,"La persona se ha registrado correctamente" );
+//                
             }
             return new Respuesta(false, "Error al registrar al jugador");
         } catch (SQLException ex) {
